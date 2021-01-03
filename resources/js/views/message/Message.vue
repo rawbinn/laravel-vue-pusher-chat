@@ -18,7 +18,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="card-body msg_card_body">
+            <div class="card-body msg_card_body" v-chat-scroll="{always: false}">
                 <div  v-for="message in messages" :key="message.id"> 
                     <div class="d-flex mb-4" :class="[message.type == 'sender' ? 'justify-content-end' : 'justify-content-start']">
                         <div class="img_cont_msg">
