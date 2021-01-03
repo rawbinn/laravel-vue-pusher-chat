@@ -4,11 +4,11 @@
             <div class="card-header msg_head">
                 <div class="d-flex bd-highlight">
                     <div class="img_cont">
-                        <img :src="'https://ui-avatars.com/api/?name=Demo+User'" class="rounded-circle user_img">
+                        <img :src="'https://ui-avatars.com/api/?name='+receiver.name" class="rounded-circle user_img">
                         <span class="online_icon"></span>
                     </div>
                     <div class="user_info">
-                        <span>Chat with Demo User</span>
+                        <span>Chat with {{receiver.name}}</span>
                     </div>
                 </div>
                 <span id="action_menu_btn" @click="toggleMenu"><i class="fas fa-ellipsis-v"></i></span>
@@ -54,7 +54,7 @@
 <script>
 
 export default {
-   
+    props: ['receiver'],
     methods : {
         toggleMenu() {
             $('.action_menu').toggle();
@@ -64,6 +64,7 @@ export default {
             .post('/api/auth/logout')
             .then(response =>  {
                 console.log('Logged out');
+                this.$store.dispatch('resetAuthUserDetail');
                 this.$router.push('/login')
             })
             .catch(error => {

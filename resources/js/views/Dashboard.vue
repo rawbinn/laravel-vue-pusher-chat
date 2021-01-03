@@ -9,13 +9,13 @@
             </div>
             <div class="card-body contacts_body">
                 <ul class="contacts">
-                    <li class="active">
+                    <li v-for="user in users" :key="user.id" @click="loadChatUser(user)" :class="{'active':user.id == receiver.id}">
                         <div class="d-flex bd-highlight">
                             <div class="img_cont">
-                                <img src="https://ui-avatars.com/api/?name=Demo+User" class="rounded-circle user_img">
+                                <img :src="'https://ui-avatars.com/api/?name='+user.name" class="rounded-circle user_img">
                             </div>
                             <div class="user_info">
-                                <span>Demo User</span>
+                                <span>{{user.name}}</span>
                             </div>
                         </div>
                     </li>
@@ -26,14 +26,51 @@
             </div>
         </div>
     </div>
-	<Message />
+	<Message :receiver = 'receiver'/>
     </div>
 </template>
 
 <script>
-	import Message from "./message/Message";
+    import Message from "./message/Message";
 
 	export default {
+		data() {
+			return {
+				users: [],
+                authUser: {},
+                receiver: {}
+			}
+		},
+		mounted() {
+            this.getUsers();
+			this.authUser = this.$store.getters.getAuthUser;
+		},
+		methods: {
+			async getUsers() {
+				await axios.get('/api/users')
+				.then(response => response.data)
+				.then(response => {
+                    this.users = response.data;
+                    this.receiver = this.users[0];
+					this.loadChatUser(this.users[0]);
+				})
+				.catch(error => {
+					console.log(error);
+					if(error.response.status == 401) {
+						this.logout();
+					}
+				});
+            },
+            
+            loadChatUser(receiver) {
+                this.receiver = receiver;
+            },
+
+			logout() {
+                this.$store.dispatch('resetAuthUserDetail');
+                this.$router.push('/login')
+			}
+		},
 		components : {
 			Message
 		}
