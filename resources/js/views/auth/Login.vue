@@ -5,7 +5,7 @@
             <div class="row w-100 mx-0">
               <div class="col-lg-4 mx-auto">
                 <div class="auth-form text-left py-5 px-4 px-sm-5">
-                    <div class="brand-logo text-center">
+                    <div class="brand-logo text-center mb-2">
                     <img src="images/logo.jpg" alt="logo">
                     </div>
                     <h6 class="font-weight-light text-center">Sign in to continue.</h6>
