@@ -79,8 +79,13 @@
 				})
 				.catch(error => {
 					console.log(error);
-					if(error.response && error.response.status == 401) {
-						this.logout();
+					
+					if(error.response){
+						if(error.response.status == 401) {
+							this.logout();
+							return
+						}
+						toastr.error(error.response.data.message);
 					}
 				});
             },
