@@ -1990,6 +1990,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       messages: [],
       receiver: {},
       authUser: {},
+      typing: false,
       loading: true
     };
   },
@@ -2012,7 +2013,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     getUsers: function getUsers() {
-      var _this = this;
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -2023,15 +2024,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.get('/api/users').then(function (response) {
                   return response.data;
                 }).then(function (response) {
-                  _this.users = response.data;
-                  _this.receiver = _this.users[0];
+                  _this2.users = response.data;
+                  _this2.receiver = _this2.users[0];
 
-                  _this.loadChatUser(_this.users[0]);
+                  _this2.loadChatUser(_this2.users[0]);
                 })["catch"](function (error) {
                   console.log(error);
 
                   if (error.response.status == 401) {
-                    _this.logout();
+                    _this2.logout();
                   }
                 });
 
@@ -2044,30 +2045,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     loadChatUser: function loadChatUser(receiver) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.loading = true;
       this.receiver = receiver;
       axios.get('/api/' + receiver.id + '/messages').then(function (response) {
         return response.data;
       }).then(function (response) {
-        _this2.loading = false;
-        _this2.messages = response.data;
+        _this3.loading = false;
+        _this3.messages = response.data;
       })["catch"](function (error) {
         console.log(error);
 
         if (error.response.status == 401) {
-          _this2.logout();
+          _this3.logout();
         }
       });
     },
     listen: function listen() {
-      var _this3 = this;
+      var _this4 = this;
+
+      var _this = this;
 
       echo["private"]('chat-' + this.authUser.id).listen('MessageSent', function (e) {
-        if (e.sender.id == _this3.receiver.id) {
-          _this3.messages.push(e.message);
+        if (e.sender.id == _this4.receiver.id) {
+          _this4.messages.push(e.message);
         }
+      }).listenForWhisper('typing', function (e) {
+        if (_this4.receiver.id == e.user.id) {
+          _this4.typing = true;
+        }
+
+        setTimeout(function () {
+          _this.typing = false;
+        }, 1000);
       });
     },
     logout: function logout() {
@@ -2304,10 +2315,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['receiver', 'messages', 'loading'],
+  props: ['receiver', 'messages', 'loading', 'typing'],
   data: function data() {
     return {
       newMessage: '',
@@ -2340,6 +2354,12 @@ __webpack_require__.r(__webpack_exports__);
         _this.$nextTick(function () {
           _this.$refs.message.focus();
         });
+      });
+    },
+    isTyping: function isTyping() {
+      echo["private"]('chat-' + this.receiver.id).whisper('typing', {
+        user: this.authUser,
+        typing: true
       });
     },
     logout: function logout() {
@@ -2395,7 +2415,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nbody,html{\n        height: 100%;\n        margin: 0;\n}\nh1{\n\t\tfont-size: 24px;\n\t\tfont-weight: 700;\n\t\tfont-family: sans-serif;\n}\n.card {\n        height: 100vh;\n        border-radius: 0px;\n        border: 0px;\n}\n.green{\n        background-color: #7dcab7;\n}\n.contacts_body{\n        padding:  0.75rem 0 !important;\n        overflow-y: auto;\n        white-space: nowrap;\n}\n.msg_card_body{\n        overflow-y: auto;\n}\n.card-header{\n        border-bottom: 0 !important;\n}\n.card-footer{\n\t\tborder-radius: 0 0 15px 15px !important;\n\t\t\tborder-top: 0 !important;\n}\n.card-footer p{\n        font-size: 14px;\n        margin-bottom: 0;\n        color: #236857;\n}\n.container{\n        align-content: center;\n}\n.search{\n        border-radius: 0px;\n        background-color: rgba(0,0,0,0.3) !important;\n        border:0 !important;\n        color:white !important;\n}\n.search:focus{\n            box-shadow:none !important;\n        outline:0px !important;\n}\n.search::placeholder, .type_msg::placeholder {\n        color: #fff;\n}\n.type_msg{\n        border:0 !important;\n        color:#000 !important;\n        height: 60px !important;\n        overflow-y: auto;\n}\n.type_msg:focus{\n            box-shadow:none !important;\n        outline:0px !important;\n}\n.attach_btn{\n        border-radius: 15px 0 0 15px !important;\n        background-color: rgba(0,0,0,0.3) !important;\n        border:0 !important;\n        color: white !important;\n        cursor: pointer;\n}\n.send_btn{\n        background-color: rgba(0,0,0,0.3) !important;\n        border:0 !important;\n        color: white !important;\n        cursor: pointer;\n        width: 55px;\n}\n.send_btn i {\n        margin: auto;\n}\n.contacts{\n        list-style: none;\n        padding: 0;\n}\n.contacts li{\n        width: 100% !important;\n        padding: 5px 10px;\n        margin-bottom: 15px !important;\n\t\tcursor: pointer;\n}\n.active{\n        background-color: rgba(0,0,0,0.3);\n}\n.user_img{\n        height: 70px;\n        width: 70px;\n        border:1.5px solid #f5f6fa;\n}\n.user_img_msg{\n        height: 40px;\n        width: 40px;\n        border:1.5px solid #f5f6fa;\n}\n.img_cont{\n\t\t\tposition: relative;\n\t\t\theight: 70px;\n\t\t\twidth: 70px;\n}\n.img_cont_msg{\n\t\t\theight: 40px;\n\t\t\twidth: 40px;\n}\n.online_icon{\n\t\tposition: absolute;\n\t\theight: 15px;\n\t\twidth:15px;\n\t\tbackground-color: #4cd137;\n\t\tborder-radius: 50%;\n\t\tbottom: 0.2em;\n\t\tright: 0.4em;\n\t\tborder:1.5px solid white;\n}\n.offline{\n\t\tbackground-color: #c23616 !important;\n}\n.user_info{\n\t\tmargin-top: auto;\n\t\tmargin-bottom: auto;\n\t\tmargin-left: 15px;\n}\n.user_info span{\n\t\tfont-size: 20px;\n\t\tcolor: white;\n}\n.user_info p{\n        font-size: 10px;\n        color: rgba(255,255,255,0.6);\n}\n.video_cam{\n\t\tmargin-left: 50px;\n\t\tmargin-top: 5px;\n}\n.video_cam span{\n\t\tcolor: white;\n\t\tfont-size: 20px;\n\t\tcursor: pointer;\n\t\tmargin-right: 20px;\n}\n.msg_cotainer{\n\t\tmargin-top: auto;\n\t\tmargin-bottom: auto;\n\t\tmargin-left: 10px;\n\t\tborder-radius: 25px;\n\t\tbackground-color: #82ccdd;\n\t\tpadding: 10px;\n\t\tposition: relative;\n}\n.msg_cotainer_send{\n\t\tmargin-top: auto;\n\t\tmargin-bottom: auto;\n\t\tmargin-right: 10px;\n\t\tborder-radius: 25px;\n\t\tbackground-color: #78e08f;\n\t\tpadding: 10px;\n\t\tposition: relative;\n}\n.msg_time{\n\t\tposition: absolute;\n\t\tleft: 0;\n\t\tbottom: -15px;\n\t\tcolor: #000;\n\t\tfont-size: 10px;\n}\n.msg_time_send{\n\t\tposition: absolute;\n\t\tright:0;\n\t\tbottom: -15px;\n\t\tcolor: rgba(255,255,255,0.5);\n\t\tfont-size: 10px;\n}\n.msg_head{\n\t\tposition: relative;\n}\n.msg_head span, .msg_head p{\n        color: #000;\n}\n#action_menu_btn{\n\t\tposition: absolute;\n\t\tright: 10px;\n\t\ttop: 10px;\n\t\tcolor: #000;\n\t\tcursor: pointer;\n\t\tfont-size: 20px;\n}\n.action_menu {\n\t\tz-index: 1;\n\t\tposition: absolute;\n\t\tbackground-color: #b9b9b9;\n\t\tcolor: white;\n\t\ttop: 30px;\n\t\tright: 15px;\n\t\tdisplay: none;\n}\n.action_menu ul{\n\t\tlist-style: none;\n\t\tpadding: 0;\n\t    margin: 0;\n}\n.action_menu ul li{\n\t\twidth: 100%;\n\t\tpadding: 10px 15px;\n\t\tmargin-bottom: 5px;\n}\n.action_menu ul li i{\n\t\tpadding-right: 10px;\n}\n.action_menu ul li:hover{\n\t\tcursor: pointer;\n\t\tbackground-color: rgba(0,0,0,0.2);\n}\n@media(max-width: 576px){\n.contacts_card{\n            margin-bottom: 15px !important;\n}\n}\n    /* width */\n::-webkit-scrollbar {\n        width: 10px;\n}\n\n    /* Track */\n::-webkit-scrollbar-track {\n        box-shadow: inset 0 0 5px grey;\n}\n    \n    /* Handle */\n::-webkit-scrollbar-thumb {\n        background: #dbdada;\n}\n\n    /* Handle on hover */\n::-webkit-scrollbar-thumb:hover {\n        background: #b8b8b8;\n}\n", ""]);
+exports.push([module.i, "\nbody,html{\n        height: 100%;\n        margin: 0;\n}\nh1{\n\t\tfont-size: 24px;\n\t\tfont-weight: 700;\n\t\tfont-family: sans-serif;\n}\n.card {\n        height: 100vh;\n        border-radius: 0px;\n        border: 0px;\n}\n.green{\n        background-color: #7dcab7;\n}\n.contacts_body{\n        padding:  0.75rem 0 !important;\n        overflow-y: auto;\n        white-space: nowrap;\n}\n.msg_card_body{\n        overflow-y: auto;\n}\n.card-header{\n        border-bottom: 0 !important;\n}\n.card-footer{\n\t\tborder-radius: 0 0 15px 15px !important;\n\t\t\tborder-top: 0 !important;\n}\n.card-footer p{\n        font-size: 14px;\n        margin-bottom: 0;\n        color: #236857;\n}\n.container{\n        align-content: center;\n}\n.search{\n        border-radius: 0px;\n        background-color: rgba(0,0,0,0.3) !important;\n        border:0 !important;\n        color:white !important;\n}\n.search:focus{\n            box-shadow:none !important;\n        outline:0px !important;\n}\n.search::placeholder, .type_msg::placeholder {\n        color: #fff;\n}\n.type_msg{\n        border:0 !important;\n        color:#000 !important;\n        height: 60px !important;\n        overflow-y: auto;\n}\n.type_msg:focus{\n            box-shadow:none !important;\n        outline:0px !important;\n}\n.attach_btn{\n        border-radius: 15px 0 0 15px !important;\n        background-color: rgba(0,0,0,0.3) !important;\n        border:0 !important;\n        color: white !important;\n        cursor: pointer;\n}\n.send_btn{\n        background-color: rgba(0,0,0,0.3) !important;\n        border:0 !important;\n        color: white !important;\n        cursor: pointer;\n        width: 55px;\n}\n.send_btn i {\n        margin: auto;\n}\n.contacts{\n        list-style: none;\n        padding: 0;\n}\n.contacts li{\n        width: 100% !important;\n        padding: 5px 10px;\n        margin-bottom: 15px !important;\n\t\tcursor: pointer;\n}\n.active{\n        background-color: rgba(0,0,0,0.3);\n}\n.user_img{\n        height: 70px;\n        width: 70px;\n        border:1.5px solid #f5f6fa;\n}\n.user_img_msg{\n        height: 40px;\n        width: 40px;\n        border:1.5px solid #f5f6fa;\n}\n.img_cont{\n\t\t\tposition: relative;\n\t\t\theight: 70px;\n\t\t\twidth: 70px;\n}\n.img_cont_msg{\n\t\t\theight: 40px;\n\t\t\twidth: 40px;\n}\n.online_icon{\n\t\tposition: absolute;\n\t\theight: 15px;\n\t\twidth:15px;\n\t\tbackground-color: #4cd137;\n\t\tborder-radius: 50%;\n\t\tbottom: 0.2em;\n\t\tright: 0.4em;\n\t\tborder:1.5px solid white;\n}\n.offline{\n\t\tbackground-color: #c23616 !important;\n}\n.user_info{\n\t\tmargin-top: auto;\n\t\tmargin-bottom: auto;\n\t\tmargin-left: 15px;\n}\n.user_info span{\n\t\tfont-size: 20px;\n\t\tcolor: white;\n}\n.user_info p{\n        font-size: 10px;\n        color: rgba(255,255,255,0.6);\n}\n.video_cam{\n\t\tmargin-left: 50px;\n\t\tmargin-top: 5px;\n}\n.video_cam span{\n\t\tcolor: white;\n\t\tfont-size: 20px;\n\t\tcursor: pointer;\n\t\tmargin-right: 20px;\n}\n.msg_cotainer{\n\t\tmargin-top: auto;\n\t\tmargin-bottom: auto;\n\t\tmargin-left: 10px;\n\t\tborder-radius: 25px;\n\t\tbackground-color: #82ccdd;\n\t\tpadding: 10px;\n\t\tposition: relative;\n}\n.msg_cotainer_send{\n\t\tmargin-top: auto;\n\t\tmargin-bottom: auto;\n\t\tmargin-right: 10px;\n\t\tborder-radius: 25px;\n\t\tbackground-color: #78e08f;\n\t\tpadding: 10px;\n\t\tposition: relative;\n}\n.msg_time{\n\t\tposition: absolute;\n\t\tleft: 0;\n\t\tbottom: -15px;\n\t\tcolor: #000;\n\t\tfont-size: 10px;\n}\n.msg_time_send{\n\t\tposition: absolute;\n\t\tright:0;\n\t\tbottom: -15px;\n\t\tcolor: rgba(255,255,255,0.5);\n\t\tfont-size: 10px;\n}\n.msg_head{\n\t\tposition: relative;\n}\n.msg_head span, .msg_head p{\n        color: #000;\n}\n.wishper {\n\t\tmargin-bottom: -15px;\n\t\tfont-size: 10px;\n\t\tcolor: #848282;\n}\n.wishper p{\n\t\tmargin: 0;\n}\n#action_menu_btn{\n\t\tposition: absolute;\n\t\tright: 10px;\n\t\ttop: 10px;\n\t\tcolor: #000;\n\t\tcursor: pointer;\n\t\tfont-size: 20px;\n}\n.action_menu {\n\t\tz-index: 1;\n\t\tposition: absolute;\n\t\tbackground-color: #b9b9b9;\n\t\tcolor: white;\n\t\ttop: 30px;\n\t\tright: 15px;\n\t\tdisplay: none;\n}\n.action_menu ul{\n\t\tlist-style: none;\n\t\tpadding: 0;\n\t    margin: 0;\n}\n.action_menu ul li{\n\t\twidth: 100%;\n\t\tpadding: 10px 15px;\n\t\tmargin-bottom: 5px;\n}\n.action_menu ul li i{\n\t\tpadding-right: 10px;\n}\n.action_menu ul li:hover{\n\t\tcursor: pointer;\n\t\tbackground-color: rgba(0,0,0,0.2);\n}\n@media(max-width: 576px){\n.contacts_card{\n            margin-bottom: 15px !important;\n}\n}\n    /* width */\n::-webkit-scrollbar {\n        width: 10px;\n}\n\n    /* Track */\n::-webkit-scrollbar-track {\n        box-shadow: inset 0 0 5px grey;\n}\n    \n    /* Handle */\n::-webkit-scrollbar-thumb {\n        background: #dbdada;\n}\n\n    /* Handle on hover */\n::-webkit-scrollbar-thumb:hover {\n        background: #b8b8b8;\n}\n", ""]);
 
 // exports
 
@@ -27822,7 +27842,8 @@ var render = function() {
         attrs: {
           receiver: _vm.receiver,
           messages: _vm.messages,
-          loading: _vm.loading
+          loading: _vm.loading,
+          typing: _vm.typing
         }
       })
     ],
@@ -28337,54 +28358,64 @@ var render = function() {
                 ],
                 staticClass: "card-body msg_card_body"
               },
-              _vm._l(_vm.messages, function(message) {
-                return _c("div", { key: message.id }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "d-flex mb-4",
-                      class: [
-                        message.type == "sender"
-                          ? "justify-content-end"
-                          : "justify-content-start"
-                      ]
-                    },
-                    [
-                      _c("div", { staticClass: "img_cont_msg" }, [
-                        _c("img", {
-                          staticClass: "rounded-circle user_img_msg",
-                          attrs: {
-                            src:
-                              "https://ui-avatars.com/api/?name=" +
-                              (message.type == "sender"
-                                ? _vm.authUser.name
-                                : _vm.receiver.name)
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          class: [
-                            message.type == "sender"
-                              ? "msg_cotainer_send"
-                              : "msg_cotainer"
-                          ]
-                        },
-                        [
-                          _vm._v(
-                            "\n                    " +
-                              _vm._s(message.message) +
-                              "\n                    "
-                          )
+              [
+                _vm._l(_vm.messages, function(message) {
+                  return _c("div", { key: message.id }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "d-flex mb-4",
+                        class: [
+                          message.type == "sender"
+                            ? "justify-content-end"
+                            : "justify-content-start"
                         ]
-                      )
-                    ]
-                  )
-                ])
-              }),
-              0
+                      },
+                      [
+                        _c("div", { staticClass: "img_cont_msg" }, [
+                          _c("img", {
+                            staticClass: "rounded-circle user_img_msg",
+                            attrs: {
+                              src:
+                                "https://ui-avatars.com/api/?name=" +
+                                (message.type == "sender"
+                                  ? _vm.authUser.name
+                                  : _vm.receiver.name)
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            class: [
+                              message.type == "sender"
+                                ? "msg_cotainer_send"
+                                : "msg_cotainer"
+                            ]
+                          },
+                          [
+                            _vm._v(
+                              "\n                    " +
+                                _vm._s(message.message) +
+                                "\n                    "
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ])
+                }),
+                _vm._v(" "),
+                _vm.typing
+                  ? _c("div", { staticClass: "wishper" }, [
+                      _c("p", { staticClass: "typing" }, [
+                        _vm._v(_vm._s(_vm.receiver.name) + " is typing...")
+                      ])
+                    ])
+                  : _vm._e()
+              ],
+              2
             ),
             _vm._v(" "),
             _c("div", { staticClass: "card-footer" }, [
@@ -28407,6 +28438,7 @@ var render = function() {
                   },
                   domProps: { value: _vm.newMessage },
                   on: {
+                    keydown: _vm.isTyping,
                     keyup: function($event) {
                       if (
                         !$event.type.indexOf("key") &&

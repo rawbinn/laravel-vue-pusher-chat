@@ -30,10 +30,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="wishper" v-if="typing">
+                    <p class="typing">{{receiver.name}} is typing...</p>
+                </div>
             </div>
             <div class="card-footer">
-                <div class="input-group">                    
-                    <textarea name="message" v-model="newMessage" class="form-control type_msg" placeholder="Type your message..." ref="message" @keyup.enter="sendMessage" :disabled = "disableTextArea"></textarea>
+                <div class="input-group">
+                    <textarea name="message" v-model="newMessage" @keydown="isTyping" class="form-control type_msg" placeholder="Type your message..." ref="message" @keyup.enter="sendMessage" :disabled = "disableTextArea"></textarea>
                     <div class="input-group-append">
                         <span class="input-group-text send_btn" @click="sendMessage"><i class="fas fa-location-arrow"></i></span>
                     </div>
@@ -48,7 +51,7 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
-    props: ['receiver','messages', 'loading'],
+    props: ['receiver','messages', 'loading', 'typing'],
     data() {
         return {
             newMessage: '',
@@ -76,6 +79,12 @@ export default {
                     this.$refs.message.focus()
                 })
             })
+        },
+        isTyping() {
+            echo.private('chat-'+this.receiver.id).whisper('typing', {
+                user: this.authUser,
+                typing: true
+            });
         },
         logout() {
             axios

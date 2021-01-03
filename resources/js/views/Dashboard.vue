@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-	<Message :receiver = 'receiver' :messages ='messages' :loading='loading'/>
+	<Message :receiver = 'receiver' :messages = 'messages' :loading = 'loading' :typing = 'typing'/>
     </div>
 </template>
 
@@ -41,6 +41,7 @@
 				messages: [],
 				receiver: {},
 				authUser: {},
+				typing: false,
 				loading: true
 			}
 		},
@@ -96,11 +97,19 @@
 			},
 			
 			listen() {
+				let _this = this;
 				echo.private('chat-'+this.authUser.id)
 				.listen('MessageSent', (e) => {
 					if(e.sender.id == this.receiver.id) {
-						this.messages.push(e.message);
+						this.messages.push(e.message)
 					}
+				}).listenForWhisper('typing', (e) => {
+					if(this.receiver.id == e.user.id) {
+						this.typing = true
+					}
+					setTimeout(function() {
+						_this.typing = false
+					}, 1000);
 				});
 			},
 
@@ -304,6 +313,14 @@
     .msg_head span, .msg_head p{
         color: #000;
     }
+	.wishper {
+		margin-bottom: -15px;
+		font-size: 10px;
+		color: #848282;
+	}
+	.wishper p{
+		margin: 0;
+	}
 	#action_menu_btn{
 		position: absolute;
 		right: 10px;
