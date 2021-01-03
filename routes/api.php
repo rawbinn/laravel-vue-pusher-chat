@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\UserController;
 
 /*
@@ -15,10 +16,6 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::group([
     'middleware' => 'api',
 ], function ($router) {
@@ -29,6 +26,8 @@ Route::group([
     Route::group(['middleware' => 'auth:api'], function () {
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::get('users', [UserController::class, 'getAll']);
+        Route::get('{user}/messages', [MessageController::class, 'getMessages']);
+        Route::post('message', [MessageController::class, 'sendMessage']);
     });
 
 });

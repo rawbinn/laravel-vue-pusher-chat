@@ -26,24 +26,39 @@
             </div>
         </div>
     </div>
-	<Message :receiver = 'receiver'/>
+	<Message :receiver = 'receiver' :messages ='messages' />
     </div>
 </template>
 
 <script>
-    import Message from "./message/Message";
+	import Message from "./message/Message";
+	import Echo from "laravel-echo";
 
 	export default {
 		data() {
 			return {
 				users: [],
-                authUser: {},
-                receiver: {}
+				messages: [],
+				receiver: {},
+				authUser: {},
 			}
 		},
 		mounted() {
             this.getUsers();
 			this.authUser = this.$store.getters.getAuthUser;
+			window.echo = new Echo({
+				broadcaster: 'pusher',
+				key: process.env.MIX_PUSHER_APP_KEY,
+				cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+				forceTLS: false,
+				auth: {
+					headers: {
+					Authorization: "Bearer " + localStorage.getItem('auth_token'),
+					Accept: "application/json",
+					},
+				},
+			});
+			this.listen();
 		},
 		methods: {
 			async getUsers() {
@@ -63,8 +78,28 @@
             },
             
             loadChatUser(receiver) {
-                this.receiver = receiver;
-            },
+				this.receiver = receiver;
+				axios.get('/api/'+receiver.id+'/messages')
+				.then(response => response.data)
+				.then(response => {
+					this.messages = response.data
+				})
+				.catch(error => {
+					console.log(error);
+					if(error.response.status == 401) {
+						this.logout();
+					}
+				});
+			},
+			
+			listen() {
+				echo.private('chat-'+this.authUser.id)
+				.listen('MessageSent', (e) => {
+					if(e.sender.id == this.receiver.id) {
+						this.messages.push(e.message);
+					}
+				});
+			},
 
 			logout() {
                 this.$store.dispatch('resetAuthUserDetail');

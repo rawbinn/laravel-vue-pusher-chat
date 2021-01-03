@@ -19,7 +19,7 @@ window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage
 
 // import Echo from 'laravel-echo';
 
-// window.Pusher = require('pusher-js');
+window.Pusher = require('pusher-js');
 
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
