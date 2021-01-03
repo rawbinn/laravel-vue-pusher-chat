@@ -14,7 +14,7 @@
                 <span id="action_menu_btn" @click="toggleMenu"><i class="fas fa-ellipsis-v"></i></span>
                 <div class="action_menu">
                     <ul>
-                        <li><i class="fas fa-user-circle"></i> Logout</li>
+                        <li @click="logout"><i class="fas fa-user-circle"></i> Logout</li>
                     </ul>
                 </div>
             </div>
@@ -58,7 +58,19 @@ export default {
     methods : {
         toggleMenu() {
             $('.action_menu').toggle();
-        },      
+        },   
+        logout() {
+            axios
+            .post('/api/auth/logout')
+            .then(response =>  {
+                console.log('Logged out');
+                this.$router.push('/login')
+            })
+            .catch(error => {
+                console.log('Not logged out');
+                console.log(error);
+            });
+        },   
     }
 }
 </script>

@@ -2009,9 +2009,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      data: {
+        email: '',
+        password: ''
+      }
+    };
+  },
+  methods: {
+    submit: function submit() {
+      var _this = this;
+
+      axios.post('/api/auth/login', this.data).then(function (response) {
+        console.log('Logged in');
+        localStorage.setItem('auth_token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
+
+        _this.$router.push({
+          path: '/'
+        });
+      })["catch"](function (error) {
+        console.log('Not logged in');
+        toastr.error(error.response.data.message);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -2073,7 +2099,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      data: {
+        name: '',
+        email: '',
+        password: ''
+      }
+    };
+  },
+  methods: {
+    submit: function submit() {
+      var _this = this;
+
+      return axios.post('/api/auth/register', this.data).then(function (response) {
+        return response.data;
+      }).then(function (response) {
+        console.log('Logged in');
+        toastr.success(response.message);
+
+        _this.$router.push('/login');
+      })["catch"](function (error) {
+        console.log('Not logged in');
+        toastr.error(error.response.data.message);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -2143,6 +2196,18 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     toggleMenu: function toggleMenu() {
       $('.action_menu').toggle();
+    },
+    logout: function logout() {
+      var _this = this;
+
+      axios.post('/api/auth/logout').then(function (response) {
+        console.log('Logged out');
+
+        _this.$router.push('/login');
+      })["catch"](function (error) {
+        console.log('Not logged out');
+        console.log(error);
+      });
     }
   }
 });
@@ -20655,45 +20720,92 @@ var render = function() {
                   [
                     _vm._m(0),
                     _vm._v(" "),
-                    _c(
-                      "h6",
-                      { staticClass: "font-weight-light text-center mt-2" },
-                      [_vm._v("Sign in to continue.")]
-                    ),
+                    _c("h6", { staticClass: "font-weight-light text-center" }, [
+                      _vm._v("Sign in to continue.")
+                    ]),
                     _vm._v(" "),
                     _c(
                       "form",
                       {
                         staticClass: "form-horizontal pt-3",
-                        attrs: { method: "POST" }
+                        attrs: { method: "POST" },
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.submit($event)
+                          }
+                        }
                       },
                       [
-                        _vm._m(1),
-                        _vm._v(" "),
-                        _vm._m(2),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "mt-3 text-center" },
-                          [
-                            _c(
-                              "button",
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
                               {
-                                staticClass:
-                                  "btn btn-block btn-black btn-lg font-weight-medium auth-form-btn",
-                                attrs: { type: "submit" }
-                              },
-                              [_vm._v("SIGN IN")]
-                            ),
-                            _vm._v(" "),
-                            _c("p", { staticClass: "mt-2" }, [_vm._v("OR")]),
-                            _vm._v(" "),
-                            _c("router-link", { attrs: { to: "/register" } }, [
-                              _vm._v("Register")
-                            ])
-                          ],
-                          1
-                        )
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.data.email,
+                                expression: "data.email"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "email",
+                              placeholder: "Your Email",
+                              name: "email",
+                              value: "",
+                              autocomplete: "off",
+                              required: "",
+                              autofocus: ""
+                            },
+                            domProps: { value: _vm.data.email },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.data, "email", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.data.password,
+                                expression: "data.password"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "password",
+                              id: "password",
+                              placeholder: "Enter Password",
+                              name: "password",
+                              autocomplete: "off",
+                              required: ""
+                            },
+                            domProps: { value: _vm.data.password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.data,
+                                  "password",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(1)
                       ]
                     )
                   ]
@@ -20719,38 +20831,16 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "text",
-          id: "email",
-          placeholder: "Your Email",
-          name: "email",
-          value: "",
-          autocomplete: "off",
-          required: "",
-          autofocus: ""
-        }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "password",
-          id: "password",
-          placeholder: "Enter Password",
-          name: "password",
-          autocomplete: "off",
-          required: ""
-        }
-      })
+    return _c("div", { staticClass: "mt-3" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "btn btn-block btn-black btn-lg font-weight-medium auth-form-btn",
+          attrs: { type: "submit" }
+        },
+        [_vm._v("SIGN IN")]
+      )
     ])
   }
 ]
@@ -20783,33 +20873,145 @@ var render = function() {
         _c("div", { staticClass: "col-md-4 login-sec" }, [
           _vm._m(1),
           _vm._v(" "),
-          _c("form", { staticClass: "login-form", attrs: { method: "post" } }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _vm._m(3),
-            _vm._v(" "),
-            _vm._m(4),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "form-check" },
-              [
-                _c("router-link", { attrs: { to: "/login" } }, [
-                  _vm._v("Back to Log in")
-                ]),
-                _vm._v(" "),
+          _c(
+            "form",
+            {
+              staticClass: "login-form",
+              attrs: { method: "post" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.submit($event)
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "form-group" }, [
                 _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-login float-right",
-                    attrs: { type: "submit" }
+                  "label",
+                  { staticClass: "text-uppercase", attrs: { for: "fullname" } },
+                  [_vm._v("FullName")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.data.name,
+                      expression: "data.name"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    id: "fullname",
+                    placeholder: "FullName",
+                    required: ""
                   },
-                  [_vm._v("Register")]
-                )
-              ],
-              1
-            )
-          ])
+                  domProps: { value: _vm.data.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.data, "name", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  { staticClass: "text-uppercase", attrs: { for: "email" } },
+                  [_vm._v("Email")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.data.email,
+                      expression: "data.email"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "email",
+                    id: "email",
+                    placeholder: "Email",
+                    required: ""
+                  },
+                  domProps: { value: _vm.data.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.data, "email", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  { staticClass: "text-uppercase", attrs: { for: "password" } },
+                  [_vm._v("Password")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.data.password,
+                      expression: "data.password"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "password",
+                    id: "password",
+                    placeholder: "Password",
+                    required: ""
+                  },
+                  domProps: { value: _vm.data.password },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.data, "password", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-check" },
+                [
+                  _c("router-link", { attrs: { to: "/login" } }, [
+                    _vm._v("Back to Log in")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-login float-right",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v("Register")]
+                  )
+                ],
+                1
+              )
+            ]
+          )
         ])
       ])
     ])
@@ -20873,70 +21075,6 @@ var staticRenderFns = [
     return _c("div", { staticClass: "text-center mb-3 brand-logo" }, [
       _c("img", { attrs: { src: "images/logo.jpg", alt: "logo" } })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c(
-        "label",
-        { staticClass: "text-uppercase", attrs: { for: "fullname" } },
-        [_vm._v("FullName")]
-      ),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "text",
-          id: "fullname",
-          placeholder: "FullName",
-          required: ""
-        }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { staticClass: "text-uppercase", attrs: { for: "email" } }, [
-        _vm._v("Email")
-      ]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "email",
-          id: "email",
-          placeholder: "Email",
-          required: ""
-        }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c(
-        "label",
-        { staticClass: "text-uppercase", attrs: { for: "password" } },
-        [_vm._v("Password")]
-      ),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "password",
-          id: "password",
-          placeholder: "Password",
-          required: ""
-        }
-      })
-    ])
   }
 ]
 render._withStripped = true
@@ -20982,7 +21120,14 @@ var render = function() {
           [_c("i", { staticClass: "fas fa-ellipsis-v" })]
         ),
         _vm._v(" "),
-        _vm._m(1)
+        _c("div", { staticClass: "action_menu" }, [
+          _c("ul", [
+            _c("li", { on: { click: _vm.logout } }, [
+              _c("i", { staticClass: "fas fa-user-circle" }),
+              _vm._v(" Logout")
+            ])
+          ])
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "card-body msg_card_body" }, [
@@ -21015,7 +21160,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(2)
+      _vm._m(1)
     ])
   ])
 }
@@ -21026,19 +21171,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "user_info" }, [
       _c("span", [_vm._v("Chat with Demo User")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "action_menu" }, [
-      _c("ul", [
-        _c("li", [
-          _c("i", { staticClass: "fas fa-user-circle" }),
-          _vm._v(" Logout")
-        ])
-      ])
     ])
   },
   function() {

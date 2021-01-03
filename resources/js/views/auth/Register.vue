@@ -21,18 +21,18 @@
                 <div class="text-center mb-3 brand-logo">
                     <img src="images/logo.jpg" alt="logo">
                 </div>
-                <form class="login-form" method="post">
+                <form class="login-form" method="post" @submit.prevent="submit">
                     <div class="form-group">
                         <label for="fullname" class="text-uppercase">FullName</label>
-                        <input type="text" id="fullname" class="form-control" placeholder="FullName" required>
+                        <input type="text" v-model="data.name" id="fullname" class="form-control" placeholder="FullName" required>
                     </div>
                     <div class="form-group">
                         <label for="email" class="text-uppercase">Email</label>
-                        <input type="email" id="email" class="form-control" placeholder="Email" required>
+                        <input type="email" v-model="data.email" id="email" class="form-control" placeholder="Email" required>
                     </div>
                     <div class="form-group">
                     <label for="password" class="text-uppercase">Password</label>
-                    <input type="password" id="password" class="form-control" placeholder="Password" required>
+                    <input type="password" v-model="data.password" id="password" class="form-control" placeholder="Password" required>
                     </div>
                     <div class="form-check">
                         <router-link to="/login">Back to Log in</router-link>
@@ -49,6 +49,29 @@
 
 <script>
 export default {
+    data() {
+        return {
+            data : {
+                name: '',
+                email: '',
+                password: ''
+            }
+        }
+    },
+    methods: {
+        submit(){
+             return axios.post('/api/auth/register', this.data)
+             .then(response => response.data)
+             .then(response =>  {
+                console.log('Logged in');
+                toastr.success(response.message);
+                this.$router.push('/login');
+            }).catch(error => {
+                console.log('Not logged in');
+                toastr.error(error.response.data.message);
+            });
+        },
+    }
 }
 </script>
 
