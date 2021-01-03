@@ -11,13 +11,17 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * Class AuthController.
+ * Class AuthController
+ * @package App\Http\Controllers\Api
  */
 class AuthController extends Controller
 {
     /**
+     * Login user
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @author Rawbinn Shrestha ( rawbinnn@gmail.com )
      */
     public function login(Request $request)
     {
@@ -33,6 +37,13 @@ class AuthController extends Controller
         return response()->json(['status' => true, 'message' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);
     }
 
+    /**
+     * Logout auth user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Rawbinn Shrestha ( rawbinnn@gmail.com )
+     */
     public function logout(Request $request)
     {
         auth('api')->logout();
@@ -40,6 +51,13 @@ class AuthController extends Controller
         return response()->json(['status' => true, 'message' => 'Logged out successfully', 'data' => []], Response::HTTP_OK);
     }
 
+    /**
+     * Register user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Rawbinn Shrestha ( rawbinnn@gmail.com )
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [

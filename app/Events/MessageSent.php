@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Events;
 
 use App\Models\Message;
@@ -12,6 +11,10 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
+/**
+ * Class MessageSent
+ * @package App\Events
+ */
 class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

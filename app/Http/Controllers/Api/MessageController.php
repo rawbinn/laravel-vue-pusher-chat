@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
@@ -10,27 +9,32 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MessageResource;
 
+/**
+ * Class MessageController
+ * @package App\Http\Controllers\Api
+ */
 class MessageController extends Controller
 {
 
     /**
-     * Show chats
+     * Chat message history
      *
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @author Rawbinn Shrestha ( rawbinnn@gmail.com )
      */
     public function getMessages(User $user, Request $request)
     {
-        
-        $messages = MessageResource::collection(Message::whereIn('sender_id', [$request->user('api')->id, $user->id])->whereIn('receiver_id', [$request->user('api')->id, $user->id])->orderBy('id', 'ASC')->get());
-        return response()
-                ->json(['data' => $messages]);
+        return MessageResource::collection(Message::whereIn('sender_id', [$request->user('api')->id, $user->id])->whereIn('receiver_id', [$request->user('api')->id, $user->id])->orderBy('id', 'ASC')->get());
     }
 
     /**
-     * Persist message to database
+     * Store message and broadcast
      *
-     * @param  Request $request
-     * @return Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Rawbinn Shrestha ( rawbinnn@gmail.com )
      */
     public function sendMessage(Request $request)
     {
