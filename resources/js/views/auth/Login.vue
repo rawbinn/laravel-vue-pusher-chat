@@ -46,14 +46,15 @@ export default {
             .then(response => {
                 console.log('Logged in');
                 localStorage.setItem('auth_token',response.data.token);
-                localStorage.setItem('user',JSON.stringify(response.data.user));
-                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
+                this.$store.dispatch('setAuthStatus');
+                this.$store.dispatch('setAuthUserDetail',response.data.user);
                 this.$router.push({ path: '/' });
                 
             })
             .catch(error => {
                 console.log('Not logged in');
-                toastr.error(error.response.data.message);
+                if(error.response) toastr.error(error.response.data.message)
             });
         },
     }
