@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
-import store from './store';
+import store from './store'
 import Dashboard from './views/Dashboard.vue'
 import Login from './views/auth/Login.vue'
 import Register from './views/auth/Register.vue'
-import VueRouter from 'vue-router';
+import PageNotFound from './views/PageNotFound.vue'
+import VueRouter from 'vue-router'
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,10 @@ const routes = [
                 component: Dashboard
             }
         ]
+    },
+    {
+        path: '*',
+        component: PageNotFound
     }
 ];
 
