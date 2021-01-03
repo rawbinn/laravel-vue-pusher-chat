@@ -1,5 +1,6 @@
 <template>
     <div class="col-md-8 col-xl-9 pl-0 pr-0 chat">
+        <loading :active='loading' :is-full-page="fullpage" :loader='loader'/>
         <div class="card" v-if="receiver">
             <div class="card-header msg_head">
                 <div class="d-flex bd-highlight">
@@ -32,7 +33,7 @@
             </div>
             <div class="card-footer">
                 <div class="input-group">                    
-                    <textarea name="message" v-model="newMessage" class="form-control type_msg" placeholder="Type your message..." ref="message" @keyup.enter="sendMessage" :disabled = "disable"></textarea>
+                    <textarea name="message" v-model="newMessage" class="form-control type_msg" placeholder="Type your message..." ref="message" @keyup.enter="sendMessage" :disabled = "disableTextArea"></textarea>
                     <div class="input-group-append">
                         <span class="input-group-text send_btn" @click="sendMessage"><i class="fas fa-location-arrow"></i></span>
                     </div>
@@ -43,14 +44,18 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
-    props: ['receiver','messages'],
+    props: ['receiver','messages', 'loading'],
     data() {
         return {
             newMessage: '',
             authUser : {},
-            disable: false
+            fullpage: false,
+            loader: 'bars',
+            disableTextArea: false
         }
     },
     mounted() {
@@ -61,11 +66,11 @@ export default {
             $('.action_menu').toggle();
         },
         sendMessage() {
-            this.disable = true;
+            this.disableTextArea = true;
             axios.post('/api/message', {receiverId: this.receiver.id, message: this.newMessage})
             .then(response =>  {
                 this.newMessage = '';
-                this.disable = false;
+                this.disableTextArea = false;
                 this.messages.push(response.data.data);
                 this.$nextTick(() => {
                     this.$refs.message.focus()
@@ -85,6 +90,9 @@ export default {
                 console.log(error);
             });
         },   
+    },
+    components: {
+        Loading
     }
 }
 </script>

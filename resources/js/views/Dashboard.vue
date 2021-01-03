@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-	<Message :receiver = 'receiver' :messages ='messages' />
+	<Message :receiver = 'receiver' :messages ='messages' :loading='loading'/>
     </div>
 </template>
 
@@ -41,6 +41,7 @@
 				messages: [],
 				receiver: {},
 				authUser: {},
+				loading: true
 			}
 		},
 		mounted() {
@@ -78,10 +79,12 @@
             },
             
             loadChatUser(receiver) {
+				this.loading = true;
 				this.receiver = receiver;
 				axios.get('/api/'+receiver.id+'/messages')
 				.then(response => response.data)
 				.then(response => {
+					this.loading = false;
 					this.messages = response.data
 				})
 				.catch(error => {
