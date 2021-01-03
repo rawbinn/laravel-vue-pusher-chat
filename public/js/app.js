@@ -2384,24 +2384,30 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.disableTextArea = true;
-      axios.post('/api/message', {
-        receiverId: this.receiver.id,
-        message: this.newMessage
-      }).then(function (response) {
-        _this.newMessage = '';
-        _this.disableTextArea = false;
 
-        _this.messages.push(response.data.data);
+      if (this.receiver.id == undefined) {
+        toastr.error('User not found!!!');
+      } else {
+        axios.post('/api/message', {
+          receiverId: this.receiver.id,
+          message: this.newMessage
+        }).then(function (response) {
+          _this.newMessage = '';
+          _this.disableTextArea = false;
 
-        _this.$nextTick(function () {
-          _this.$refs.message.focus();
+          _this.messages.push(response.data.data);
+
+          _this.$nextTick(function () {
+            _this.$refs.message.focus();
+          });
+        })["catch"](function (error) {
+          console.log(error);
         });
-      });
+      }
     },
     isTyping: function isTyping() {
       echo["private"]('chat-' + this.receiver.id).whisper('typing', {
-        user: this.authUser,
-        typing: true
+        user: this.authUser
       });
     },
     logout: function logout() {
@@ -27982,7 +27988,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "brand-logo text-center" }, [
+    return _c("div", { staticClass: "brand-logo text-center mb-2" }, [
       _c("img", { attrs: { src: "images/logo.jpg", alt: "logo" } })
     ])
   }
@@ -45699,8 +45705,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\MAMP\htdocs\laravel-vue-pusher-chat\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\MAMP\htdocs\laravel-vue-pusher-chat\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! C:\MAMP\htdocs\mavorionchat\laravel-vue-pusher-chat\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\MAMP\htdocs\mavorionchat\laravel-vue-pusher-chat\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

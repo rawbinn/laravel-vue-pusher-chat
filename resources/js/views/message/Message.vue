@@ -71,20 +71,28 @@ export default {
         },
         sendMessage() {
             this.disableTextArea = true;
-            axios.post('/api/message', {receiverId: this.receiver.id, message: this.newMessage})
-            .then(response =>  {
-                this.newMessage = '';
-                this.disableTextArea = false;
-                this.messages.push(response.data.data);
-                this.$nextTick(() => {
-                    this.$refs.message.focus()
+            if(this.receiver.id == undefined) {
+                toastr.error('User not found!!!');
+            }
+            else{
+                axios.post('/api/message', {receiverId: this.receiver.id, message: this.newMessage})
+                .then(response =>  {
+                    this.newMessage = '';
+                    this.disableTextArea = false;
+                    this.messages.push(response.data.data);
+                    this.$nextTick(() => {
+                        this.$refs.message.focus()
+                    })
                 })
-            })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+
         },
         isTyping() {
             echo.private('chat-'+this.receiver.id).whisper('typing', {
-                user: this.authUser,
-                typing: true
+                user: this.authUser
             });
         },
         logout() {
