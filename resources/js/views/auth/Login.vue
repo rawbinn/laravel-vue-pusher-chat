@@ -18,7 +18,7 @@
                         </div>
                         <div class="mt-3 text-center">
                             <button class="btn btn-block btn-black btn-lg font-weight-medium auth-form-btn" type="submit">SIGN IN</button>
-                            <p>OR</p>
+                            <p class="mt-2">OR</p>
                             <router-link to="/register">Register</router-link>
                         </div>
                     </form>

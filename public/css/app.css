@@ -98,25 +98,26 @@ h1{
     background-color: rgba(0,0,0,0.3);
 }
 .user_img{
-    height: 70px;
-    width: 70px;
+    height: 60px;
+    width: 60px;
     border:1.5px solid #f5f6fa;
 
 }
 .user_img_msg{
-    height: 40px;
-    width: 40px;
+    height: 34px;
+    width: 34px;
     border:1.5px solid #f5f6fa;
 
 }
 .img_cont{
         position: relative;
-        height: 70px;
-        width: 70px;
+        height: 60px;
+        width: 60px;
 }
 .img_cont_msg{
-        height: 40px;
-        width: 40px;
+        height: 34px;
+        width: 34px;
+        line-height: 2px;
 }
 .online_icon{
     position: absolute;
@@ -158,19 +159,18 @@ h1{
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 10px;
-    border-radius: 25px;
-    background-color: #82ccdd;
-    padding: 10px;
+    border-radius: 20px;
+    padding: 8px 12px;
     position: relative;
+    font-size: .9375rem;
 }
-.msg_cotainer_send{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 10px;
-    border-radius: 25px;
-    background-color: #78e08f;
-    padding: 10px;
-    position: relative;
+
+.message-receive{
+    background-color: #e4e6eb;
+}
+.message-send{
+    background-color: rgb(0, 153, 255);
+    color: #fff;
 }
 .msg_time{
     position: absolute;
@@ -193,11 +193,12 @@ h1{
     color: #000;
 }
 .wishper {
-    margin-bottom: -15px;
-    font-size: 10px;
+    position: absolute;
+    top: -18px;
     color: #848282;
 }
 .wishper p{
+    font-size: 10px;
     margin: 0;
 }
 #action_menu_btn{

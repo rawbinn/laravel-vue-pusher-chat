@@ -1999,8 +1999,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.authUser = this.$store.getters.getAuthUser;
     window.echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_2__["default"]({
       broadcaster: 'pusher',
-      key: "",
-      cluster: "mt1",
+      key: "701a52f970151de3db43",
+      cluster: "ap2",
       forceTLS: false,
       auth: {
         headers: {
@@ -2311,6 +2311,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.css */ "./node_modules/vue-loading-overlay/dist/vue-loading.css");
 /* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_1__);
+//
 //
 //
 //
@@ -27956,7 +27957,7 @@ var render = function() {
                               [_vm._v("SIGN IN")]
                             ),
                             _vm._v(" "),
-                            _c("p", [_vm._v("OR")]),
+                            _c("p", { staticClass: "mt-2" }, [_vm._v("OR")]),
                             _vm._v(" "),
                             _c("router-link", { attrs: { to: "/register" } }, [
                               _vm._v("Register")
@@ -28305,67 +28306,66 @@ var render = function() {
                 ],
                 staticClass: "card-body msg_card_body"
               },
-              [
-                _vm._l(_vm.messages, function(message) {
-                  return _c("div", { key: message.id }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "d-flex mb-4",
-                        class: [
-                          message.type == "sender"
-                            ? "justify-content-end"
-                            : "justify-content-start"
-                        ]
-                      },
-                      [
-                        _c("div", { staticClass: "img_cont_msg" }, [
-                          _c("img", {
-                            staticClass: "rounded-circle user_img_msg",
-                            attrs: {
-                              src:
-                                "https://ui-avatars.com/api/?name=" +
-                                (message.type == "sender"
-                                  ? _vm.authUser.name
-                                  : _vm.receiver.name)
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            class: [
-                              message.type == "sender"
-                                ? "msg_cotainer_send"
-                                : "msg_cotainer"
-                            ]
-                          },
-                          [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(message.message) +
-                                "\n                    "
-                            )
-                          ]
-                        )
+              _vm._l(_vm.messages, function(message) {
+                return _c("div", { key: message.id }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "d-flex mb-4",
+                      class: [
+                        message.type == "sender"
+                          ? "justify-content-end"
+                          : "justify-content-start"
                       ]
-                    )
-                  ])
-                }),
-                _vm._v(" "),
-                _vm.typing
-                  ? _c("div", { staticClass: "wishper" }, [
-                      _c("p", { staticClass: "typing" }, [
-                        _vm._v(_vm._s(_vm.receiver.name) + " is typing...")
-                      ])
-                    ])
-                  : _vm._e()
-              ],
-              2
+                    },
+                    [
+                      _c("div", { staticClass: "img_cont_msg" }, [
+                        _c("img", {
+                          staticClass: "rounded-circle user_img_msg",
+                          attrs: {
+                            src:
+                              "https://ui-avatars.com/api/?name=" +
+                              (message.type == "sender"
+                                ? _vm.authUser.name
+                                : _vm.receiver.name)
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "msg_cotainer",
+                          class: [
+                            message.type == "sender"
+                              ? "message-send"
+                              : "message-receive"
+                          ]
+                        },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(message.message) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              }),
+              0
             ),
             _vm._v(" "),
-            _c("div", { staticClass: "card-footer" }, [
+            _c("div", { staticClass: "card-footer position-relative" }, [
+              _vm.typing
+                ? _c("div", { staticClass: "wishper" }, [
+                    _c("p", { staticClass: "typing" }, [
+                      _vm._v(_vm._s(_vm.receiver.name) + " is typing...")
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c("div", { staticClass: "input-group" }, [
                 _c("textarea", {
                   directives: [
@@ -45699,8 +45699,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\MAMP\htdocs\mavorionchat\laravel-vue-pusher-chat\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\MAMP\htdocs\mavorionchat\laravel-vue-pusher-chat\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! C:\MAMP\htdocs\laravel-vue-pusher-chat\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\MAMP\htdocs\laravel-vue-pusher-chat\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

@@ -25,16 +25,17 @@
                         <div class="img_cont_msg">
                             <img :src="'https://ui-avatars.com/api/?name='+(message.type == 'sender' ? authUser.name : receiver.name)" class="rounded-circle user_img_msg">
                         </div>
-                        <div :class="[message.type == 'sender' ? 'msg_cotainer_send' : 'msg_cotainer']">
+                        <div class="msg_cotainer" :class="[message.type == 'sender' ? 'message-send' : 'message-receive']">
                         {{message.message}}
                         </div>
                     </div>
                 </div>
+                
+            </div>
+            <div class="card-footer position-relative">
                 <div class="wishper" v-if="typing">
                     <p class="typing">{{receiver.name}} is typing...</p>
                 </div>
-            </div>
-            <div class="card-footer">
                 <div class="input-group">
                     <textarea name="message" v-model="newMessage" @keydown="isTyping" class="form-control type_msg" placeholder="Type your message..." ref="message" @keyup.enter="sendMessage" :disabled = "disableTextArea"></textarea>
                     <div class="input-group-append">
