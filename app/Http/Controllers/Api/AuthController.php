@@ -65,6 +65,7 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
         ]);
+        
         if ($validator->fails()) {
             $errors = $validator->messages()->all();
             return response()->json(['status' => false, 'message' => $errors[0], 'data' => []], Response::HTTP_UNPROCESSABLE_ENTITY);

@@ -1999,8 +1999,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.authUser = this.$store.getters.getAuthUser;
     window.echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_2__["default"]({
       broadcaster: 'pusher',
-      key: "701a52f970151de3db43",
-      cluster: "ap2",
+      key: "",
+      cluster: "mt1",
       forceTLS: false,
       auth: {
         headers: {
@@ -2039,8 +2039,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 })["catch"](function (error) {
                   console.log(error);
 
-                  if (error.response && error.response.status == 401) {
-                    _this2.logout();
+                  if (error.response) {
+                    if (error.response.status == 401) {
+                      _this2.logout();
+
+                      return;
+                    }
+
+                    toastr.error(error.response.data.message);
                   }
                 });
 
@@ -45693,8 +45699,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\MAMP\htdocs\laravel-vue-pusher-chat\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\MAMP\htdocs\laravel-vue-pusher-chat\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! C:\MAMP\htdocs\mavorionchat\laravel-vue-pusher-chat\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\MAMP\htdocs\mavorionchat\laravel-vue-pusher-chat\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })
